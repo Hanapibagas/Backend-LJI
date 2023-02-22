@@ -16,10 +16,11 @@ class CreateWorkingHoursTable extends Migration
     {
         Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
-            $table->time('working_hours');
+            $table->time('clock_in');
+            $table->time('home_time');
+            $table->string('location');
             $table->timestamps();
         });
-        WorkingHours::create(['working_hours' => '08:15:00']);
     }
 
     /**

@@ -4,11 +4,28 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\AbsensiService;
 
 class AbsenController extends Controller
 {
-    // public function absenMasuk(Request $request)
-    // {
-    //     $data_validate =
-    // }
+    protected $absensiService;
+
+    public function __construct(AbsensiService $absensiService){
+        $this->absensiService = $absensiService;
+    }
+
+    public function absentEntry(request $request){
+        try{
+            $data = $this->absensiService->absenMasuk($request);
+        }catch(Error $e){
+            $data = [
+                'status' => 500,
+                'message' => $e->getMessage()
+            ];
+        }
+            return response()->json([
+                'message' => 'Berhasil Melakukan Absen Masuk',
+                'data' => $data
+            ]);
+    }
 }

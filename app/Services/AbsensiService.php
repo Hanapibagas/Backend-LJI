@@ -41,23 +41,23 @@ class AbsensiService
     function insertAbsen($request)
     {
         $dateTime = Carbon::now();
-        $jam_kerja = $this->absensiRepository->getJamKerja();
+        $working_hours = $this->absensiRepository->getJamKerja();
         $data_absen = $this->absensiRepository->dataAbsenMasuk($dateTime);
 
-        $clock_in = $exJamKerja[0];
-        $clock_out = $exJamKerja[1];
+        $clock_in = $working_hours->clock_in;
+        $clock_out = $working_hours->home_time;
 
         $data['status'] = "";
         if (empty($data_absen)) {
-            if ($dateTime->toTimeString() <= $jamPulang) {
+            if ($dateTime->toTimeString() <= $working_hours->home_time) {
                 $files = $request->file('foto');
                 $file_name = 'absen-masuk-' . date('YmdHis-') . str_replace(' ', '', $files->getClientOriginalName());
                 Storage::disk('local')->putFileAs('public/absensi', $files, $file_name);
                 $data['foto'] = $file_name;
-                $data['jam_masuk'] = $dateTime->toTimeString();
-                $data['jam_pulang'] = null;
+                $data['clock_in'] = $dateTime->toTimeString();
+                $data['clock_out'] = null;
                 $data['koordinat'] = $request['koordinat'];
-                if ($dateTime->toTimeString() > $jamMasuk) {
+                if ($dateTime->toTimeString() > $clock_in) {
                     $data['status'] = 'Terlambat';
                 } else {
                     $data['status'] = 'Hadir';
@@ -92,9 +92,9 @@ class AbsensiService
                 'Data' => $validator->errors()
             ], 422));
         }
-        $lokasiKerja = $this->absensiRepository->getLokasiKerja();
+        $working_hours = $this->absensiRepository->getJamKerja();
         $koordinatUser = explode(',', $request->koordinat);
-        $koordinatLokasi = explode(',', $lokasiKerja->titik_koordinat);
+        $koordinatLokasi = explode(',', $working_hours->location);
         $radius = 100;
         if ($this->haversineGreatCircleDistance($koordinatUser[0], $koordinatUser[1], $koordinatLokasi[0], $koordinatLokasi[1]) <= $radius) {
             return $this->insertAbsen($request);
@@ -124,22 +124,18 @@ class AbsensiService
         }
         $dateTime = Carbon::now();
         $data_absen = $this->absensiRepository->dataAbsenPulang($dateTime);
-        $jam_kerja = $this->absensiRepository->getJamKerja();
+        $working_hours = $this->absensiRepository->getJamKerja();
+        $clock_out = $working_hours->home_time;
 
-        $exJamKerja = explode(',', $jam_kerja);
-        $jamMasuk = $exJamKerja[0];
-        $jamPulang = $exJamKerja[1];
-
-        if ($dateTime->toTimeString() <= $jamPulang) {
+        if ($dateTime->toTimeString() <= $clock_out) {
             throw new HttpResponseException(response()->json([
                 'message'   => 'Belum Bisa Melakukan Absen Pulang',
             ], 500));
         }
 
         if (!empty($data_absen) && ($data_absen->status == 'Hadir' || $data_absen->status == 'Terlambat')) {
-            $lokasiKantor = $this->absensiRepository->getLokasiKerja();
             $koordinatUser = explode(',', $request->koordinat);
-            $koordinatKantor = explode(',', $lokasiKantor->titik_koordinat);
+            $koordinatKantor = explode(',', $working_hours->location);
             $radius = 100;
             if ($this->haversineGreatCircleDistance($koordinatUser[0], $koordinatUser[1], $koordinatKantor[0], $koordinatKantor[1]) <= $radius) {
                 $files = $request->file('foto');
@@ -147,7 +143,7 @@ class AbsensiService
                 $file_name = 'absen-pulang-' . date('YmdHis-') . str_replace(' ', '', $files->getClientOriginalName());
                 Storage::disk('local')->putFileAs('public/absensi', $files, $file_name);
                 $data['foto'] = $file_name;
-                $data['jam_pulang'] = $dateTime->toTimeString();
+                $data['clock_out'] = $dateTime->toTimeString();
                 $data['koordinat'] = $request->koordinat;
                 return  $this->absensiRepository->absenPulang($data, $dateTime);
             } else {

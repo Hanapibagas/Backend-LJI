@@ -17,7 +17,7 @@ class WorkingHoursSeeder extends Seeder
         WorkingHours::create([
             'clock_in' => '08:15:00',
             'home_time' => '16:30:00',
-            'location' => 'liny jaya informatika'
+            'location' => '-5.1552719291637015,119.44172994190482'
         ]);
     }
 }

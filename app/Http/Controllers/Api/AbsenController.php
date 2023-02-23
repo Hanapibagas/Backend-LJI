@@ -28,4 +28,19 @@ class AbsenController extends Controller
                 'data' => $data
             ]);
     }
+
+    public function absentHome(Request $request){
+        try{
+            $data = $this->absensiService->absenPulang($request);
+        }catch(Error $e){
+            $daata = [
+                'status' => 500,
+                'message' => $e->getMessage()
+            ];
+        }
+            return response()->json([
+                'message' => 'Berhasil Melakukan Absen Pulang',
+                'data' => $data
+            ]);
+    }
 }

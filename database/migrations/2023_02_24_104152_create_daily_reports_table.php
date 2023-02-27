@@ -16,7 +16,7 @@ class CreateDailyReportsTable extends Migration
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

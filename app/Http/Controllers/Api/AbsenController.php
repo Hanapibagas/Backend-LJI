@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use App\Models\Absen;
 use Illuminate\Http\Request;
 use App\Services\AbsensiService;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class AbsenController extends Controller
 {
@@ -42,5 +45,30 @@ class AbsenController extends Controller
                 'message' => 'Berhasil Melakukan Absen Pulang',
                 'data' => $data
             ]);
+    }
+
+    public function getWeeklyAbsence(){
+        $data = Absen::select("*")
+                ->whereBetween('created_at',
+                        [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+                    )
+                ->where('user_id',Auth::user()->id)
+                ->get();
+
+        return response()->json([
+            'message' => 'Daftar absen minggu ini',
+            'data' => $data
+        ]);
+    }
+
+    public function getMonthlyAbsence(){
+        $data = Absen::select('*')
+        ->whereMonth('created_at', Carbon::now()->month)
+        ->where('user_id',Auth::user()->id)
+        ->get();
+        return response()->json([
+            'message' => 'Daftar absen bulan ini',
+            'data' => $data
+        ]);
     }
 }

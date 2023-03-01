@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Auth;
 use App\Models\DailyReport;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,7 @@ class DailyReportController extends Controller
     public function getDailyReport(){
         $data = DailyReport::where('user_id',Auth::user()->id)->get();
         return response()->json([
-            'message' => 'Data Daily Report',
+            'message' => 'Data Laporan Harian',
             'data' => $data
         ],200);
     }
@@ -22,7 +23,7 @@ class DailyReportController extends Controller
         $daily_report = DailyReport::whereDate('created_at',date('Y-m-d'))->first();
         if($daily_report){
             return response()->json([
-                'message' => "Today's report already exists"
+                'message' => "Anda telah mengirim laporan hari ini"
             ],422);
         }
         $data_validate = $request->all();
@@ -39,7 +40,7 @@ class DailyReportController extends Controller
         $data->description = $request->description;
         $data->save();
         return response()->json([
-            'message' => 'Success Create Daily Report',
+            'message' => 'Berhasil mengirim laporan harian',
             'data' => $data
         ],200);
     }
@@ -59,8 +60,16 @@ class DailyReportController extends Controller
         $data->description = $request->description;
         $data->save();
         return response()->json([
-            'message' => 'Success Update Daily Report',
+            'message' => 'Berhasil mengupdate laporan harian',
             'data' => $data
+        ],200);
+    }
+
+    public function getAnnouncement(){
+        $datas = Announcement::get();
+        return response()->json([
+            'message' => 'Daftar data pengumuman',
+            'data' => $datas
         ],200);
     }
 }

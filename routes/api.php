@@ -17,9 +17,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     // Absensi
     Route::post('v1/absent-entry', [AbsenController::class, 'absentEntry']);
     Route::put('v1/absent-home', [AbsenController::class, 'absentHome']);
+    Route::get('v1/weekly-absence',[AbsenController::class,'getWeeklyAbsence']);
+    Route::get('v1/monthly-absence',[AbsenController::class,'getMonthlyAbsence']);
 
     //daily report
     Route::get('v1/daily-report', [DailyReportController::class, 'getDailyReport']);
     Route::post('v1/daily-report', [DailyReportController::class, 'storeDailyReport']);
     Route::put('v1/daily-report/{id}', [DailyReportController::class, 'updateDailyReport']);
+
+    //Announcement
+    Route::get('v1/announcement', [DailyReportController::class, 'getAnnouncement']);
 });

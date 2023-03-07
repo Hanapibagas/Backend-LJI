@@ -20,4 +20,9 @@ class Absen extends Model
         'login_coordinates',
         'return_coordinates'
     ];
+
+    public function User()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

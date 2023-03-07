@@ -9,9 +9,13 @@ class DailyReport extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','description'];
+    protected $fillable = [
+        'user_id',
+        'description'
+    ];
 
-    public function User(){
-        return $this->belongsTo(User::class);
+    public function User()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\WorkingHours;
+use App\Models\WorkLocation;
 use Illuminate\Database\Seeder;
 
 class WorkingHoursSeeder extends Seeder
@@ -15,9 +16,12 @@ class WorkingHoursSeeder extends Seeder
     public function run()
     {
         WorkingHours::create([
-            'clock_in' => '08:15:00',
-            'home_time' => '16:30:00',
-            'location' => '-5.1552719291637015,119.44172994190482'
+            'jam_masuk' => '08:15:00',
+            'jam_pulang' => '16:30:00',
+        ]);
+        WorkLocation::create([
+            'ket' => 'Kantor Liny Jaya',
+            'titik_koordinat' => '-5.1552719291637015_119.44172994190482'
         ]);
     }
 }

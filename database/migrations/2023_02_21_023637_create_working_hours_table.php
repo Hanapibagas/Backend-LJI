@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\WorkingHours;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +16,10 @@ class CreateWorkingHoursTable extends Migration
     {
         Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
-            $table->time('jam_masuk');
-            $table->time('jam_pulang');
+            $table->time('clock_in');
+            $table->time('home_time');
+            $table->string('location');
+            $table->string('ket');
             $table->timestamps();
         });
     }

@@ -43,18 +43,16 @@ Jam dan lokasi
                         </div>
                     </div>
                     <div class="white_card_body">
-                        <form action="{{ route('update_setting_jam_kantor', $datas->id) }}" method="post">
-                            @csrf
-                            @method('PUT')
+                        <form id="edit-jam" name="edit-jam" class="forms-sample">
+                            <input type="hidden" name="id" value="{{ $datas->id }}">
                             <div class="mb-3">
                                 <label class="form-label" for="exampleInputEmail1">Jam masuk</label>
-                                <input type="time" name="jam_masuk" value="{{ $datas->jam_masuk }}" class="form-control"
-                                    id="exampleInputEmail1" aria-describedby="emailHelp">
+                                <input type="time" class="form-control" name="clock_in" value="{{ $datas->clock_in }}">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="exampleInputEmail1">Jam pulang</label>
-                                <input type="time" name="jam_pulang" value="{{ $datas->jam_pulang }}"
-                                    class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                <input type="time" class="form-control" name="home_time"
+                                    value="{{ $datas->home_time }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Perbarui jam</button>
                         </form>
@@ -72,14 +70,14 @@ Jam dan lokasi
                     </div>
                     <div class="white_card_body">
                         <form class="forms-sample" id="form-tambah-edit" name="form-tambah-edit">
-                            <input type="hidden" name="id" value="{{ $lokasikerja->id }}">
+                            <input type="hidden" name="id" value="{{ $datas->id }}">
                             <input type="hidden" class="form-control" id="koordinat" name="koordinat"
-                                value="{{ $lokasikerja->titik_koordinat }}">
-                            <input type="hidden" id="work_locations" name="work_locations">
+                                value="{{ $datas->location }}">
+                            <input type="hidden" id="location" name="location">
                             <div class="mb-3">
                                 <label class="form-label" for="exampleInputEmail1">Lokasi Kerja</label>
-                                <input type="string" name="keterangan" value="{{ $lokasikerja->ket }}"
-                                    class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                <input type="string" name="ket" value="{{ $datas->ket }}" class="form-control"
+                                    id="exampleInputEmail1" aria-describedby="emailHelp">
                             </div>
                             <div class="mb-3">
                                 <div id="leafletMap-registration"></div>
@@ -102,7 +100,38 @@ Jam dan lokasi
 @push('add-script')
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 <script type="text/javascript">
-    //ketika tombol simpan di tekan
+    $(function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            });
+
+        $('#edit-jam').on('submit', function(e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+                var form = $('form');
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('update_setting_jam_kantor') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses!',
+                            text: 'Data berhasil di update!'
+                        });
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                    }
+                });
+            });
+
         $('#form-tambah-edit').on('submit', function(e) {
             e.preventDefault();
 
@@ -131,18 +160,16 @@ Jam dan lokasi
             });
         });
 
-        //openstreep map
-        // you want to get it of the window global
         const providerOSM = new GeoSearch.OpenStreetMapProvider();
 
         var lokasi = document.getElementById('koordinat').value;
-        var koordinat = lokasi.split('_');
-        //leaflet map
+        var koordinat = lokasi.split(',');
+
         var leafletMap = L.map('leafletMap-registration', {
             fullscreenControl: true,
             // OR
             fullscreenControl: {
-                pseudoFullscreen: false // if true, fullscreen to page width and height
+                pseudoFullscreen: false
             },
             minZoom: 2
         }).setView([koordinat[0], koordinat[1]], 14);
@@ -151,7 +178,6 @@ Jam dan lokasi
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(leafletMap);
 
-        // let theMarker = {};
         theMarker = L.marker([koordinat[0], koordinat[1]]).addTo(leafletMap);
 
         leafletMap.on('click', function(e) {
@@ -163,9 +189,9 @@ Jam dan lokasi
             };
             theMarker = L.marker([latitude, longitude]).addTo(leafletMap);
 
-            let lokasiKantor = latitude + '_' + longitude;
+            let lokasiKantor = latitude + ',' + longitude;
 
-            document.getElementById("work_locations").value = lokasiKantor;
+            document.getElementById("location").value = lokasiKantor;
         });
 
         const search = new GeoSearch.GeoSearchControl({
@@ -177,15 +203,5 @@ Jam dan lokasi
 
         leafletMap.addControl(search);
 
-        //end
-
-        $(function() {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
 </script>
 @endpush

@@ -44,17 +44,18 @@ Pengumuman
                                     <tbody>
                                         @foreach ( $absen as $data )
                                         <tr>
-                                            <th>{{ $data->title }}</th>
+                                            <th>{{ $data->User->name }}</th>
                                             <th>{{ $data->date }}</th>
                                             <th>{{ $data->clock_in }}</th>
                                             <th>{{ $data->clock_out }}</th>
-                                            <th>{{ $data->incoming_photo }}</th>
-                                            <th>{{ $data->home_photo }}</th>
+                                            <th>
+                                                <img src="{{ asset('storage/absensi/' .$data->incoming_photo) }}"
+                                                    alt="Test" style="width: 100px; ">
+                                            </th>
+                                            <th>
+                                                {{ $data->home_photo }}
+                                            </th>
                                             <th>{{ $data->status }}</th>
-                                            {{-- <td>
-                                                <img src="{{ asset('storage/'.$data->picture) }}" alt=""
-                                                    style="width: 150px" class="img-thumbnail">
-                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>

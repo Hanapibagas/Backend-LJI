@@ -40,6 +40,7 @@ Route::prefix('dashboard')->middleware(['auth', 'admin'])->group(function () {
 
     // Setting
     Route::get('/location&jam', [SettingController::class, 'index'])->name('index_setting');
-    Route::put('/location&jam/update/{id}', [SettingController::class, 'update_jamkantor'])->name('update_setting_jam_kantor');
+    Route::post('/update', [SettingController::class, 'update_jamkantor'])->name('update_setting_jam_kantor');
+
     Route::post('/lokasi-kantor-update', [SettingController::class, 'update'])->name('lokasiKantor.update');
 });

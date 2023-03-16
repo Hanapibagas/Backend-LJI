@@ -10,6 +10,10 @@ class WorkingHours extends Model
     use HasFactory;
 
     protected $fillable = [
-        'jam_masuk', 'jam_pulang'
+        'clock_in',
+        'home_time',
+        'location',
+        'location',
+        'ket',
     ];
 }

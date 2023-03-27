@@ -63,7 +63,6 @@ class UserController extends Controller
         $update->update([
             "name" => request('name'),
             "jabatan" => request('jabatan'),
-            "ttl" => request('ttl'),
             "email" => request('email'),
             "foto" => $file,
             'password' => bcrypt($request->password),

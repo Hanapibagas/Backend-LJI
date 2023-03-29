@@ -21,7 +21,7 @@ class UserController extends Controller
         ])) {
             $user = Auth::user();
             $success['token']  = $user->createToken('nApp')->accessToken;
-            return response()->json(['success' => $success], 401);
+            return response()->json(['success' => $success], 200);
         } else {
             return response()->json(['error' => 'Unauthorised'], 401);
         }

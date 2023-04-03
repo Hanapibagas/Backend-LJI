@@ -24,14 +24,26 @@ Pengumuman
                                     <thead>
                                         <tr>
                                             <th scope="col">Nama Crew</th>
-                                            <th scope="col">Deskripsi</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Sub Title</th>
+                                            <th scope="col">Date Time</th>
+                                            <th scope="col">Note Text</th>
+                                            <th scope="col">Img Path</th>
+                                            <th scope="col">Web Link</th>
+                                            <th scope="col">Color</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ( $laporan as $data )
                                         <tr>
                                             <th>{{ $data->User->name }}</th>
-                                            <th>{{ $data->description }}</th>
+                                            <th>{{ $data->title }}</th>
+                                            <th>{{ $data->subtitle }}</th>
+                                            <th>{{ $data->date_time }}</th>
+                                            <th>{{ $data->note_text }}</th>
+                                            <th>{{ $data->img_path }}</th>
+                                            <th>{{ $data->web_link }}</th>
+                                            <th>{{ $data->color }}</th>
                                         </tr>
                                         @endforeach
                                     </tbody>

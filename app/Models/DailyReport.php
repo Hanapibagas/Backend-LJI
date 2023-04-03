@@ -11,7 +11,13 @@ class DailyReport extends Model
 
     protected $fillable = [
         'user_id',
-        'description'
+        'title',
+        'subtitle',
+        'date_time',
+        'note_text',
+        'img_path',
+        'web_link',
+        'color',
     ];
 
     public function User()

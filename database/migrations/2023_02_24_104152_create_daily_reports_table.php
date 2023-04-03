@@ -16,7 +16,13 @@ class CreateDailyReportsTable extends Migration
         Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->text('description');
+            $table->text('title');
+            $table->text('subtitle');
+            $table->string('date_time');
+            $table->string('note_text');
+            $table->string('img_path')->nullable();
+            $table->string('web_link')->nullable();
+            $table->string('color');
             $table->timestamps();
         });
     }
